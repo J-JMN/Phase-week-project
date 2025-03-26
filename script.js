@@ -53,3 +53,51 @@ async function initializeApp() {
     }
 }
 
+// Set initial theme from localStorage
+function setInitialTheme() {
+    if (currentTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        themeBtn.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
+    } else {
+        document.body.classList.remove('dark-mode');
+        themeBtn.innerHTML = '<i class="fas fa-moon"></i> Dark Mode';
+    }
+}
+
+// Handle search form submission
+async function handleSearch(e) {
+    e.preventDefault();
+    const searchTerm = searchInput.value.trim().toLowerCase();
+    
+    try {
+        showLoading();
+        
+        if (!searchTerm) {
+            // If search is empty, reset to all movies
+            filteredMovies = [...movies];
+        } else {
+            // Filter movies based on search term
+            filteredMovies = movies.filter(movie => 
+                movie.Title.toLowerCase().includes(searchTerm)
+            );
+        }
+        
+        // Apply any existing filters
+        applyFilters();
+        
+        if (filteredMovies.length === 0) {
+            showNoResults();
+        } else {
+            displayMovies(filteredMovies);
+        }
+        
+        updateResultsCount(filteredMovies.length);
+        
+    } catch (error) {
+        console.error('Error searching movies:', error);
+        showError("Error searching movies. Please try again.");
+    } finally {
+        hideLoading();
+    }
+}
+
