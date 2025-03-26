@@ -101,3 +101,42 @@ async function handleSearch(e) {
     }
 }
 
+
+// Filter movies based on selected filters
+function filterMovies() {
+    applyFilters();
+    displayMovies(filteredMovies);
+    updateResultsCount(filteredMovies.length);
+}
+
+// Apply year and type filters to the current movie list
+function applyFilters() {
+    const year = yearFilter.value;
+    const type = typeFilter.value;
+    
+    filteredMovies = [...movies];
+    
+    // Apply search filter if there's a search term
+    const searchTerm = searchInput.value.trim().toLowerCase();
+    if (searchTerm) {
+        filteredMovies = filteredMovies.filter(movie => 
+            movie.Title.toLowerCase().includes(searchTerm)
+        );
+    }
+    
+    // Apply year filter
+    if (year) {
+        filteredMovies = filteredMovies.filter(movie => {
+            const movieYear = movie.Year.includes('-') 
+                ? movie.Year.split('-')[0] 
+                : movie.Year;
+            return movieYear.startsWith(year);
+        });
+    }
+    
+    // Apply type filter
+    if (type) {
+        filteredMovies = filteredMovies.filter(movie => movie.Type === type);
+    }
+}
+
