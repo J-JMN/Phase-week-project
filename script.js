@@ -239,3 +239,43 @@ function resetFilters() {
     updateResultsCount(filteredMovies.length);
 }
 
+// Toggle between light and dark theme
+function toggleTheme() {
+    if (currentTheme === 'light') {
+        document.body.classList.add('dark-mode');
+        currentTheme = 'dark';
+        themeBtn.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
+    } else {
+        document.body.classList.remove('dark-mode');
+        currentTheme = 'light';
+        themeBtn.innerHTML = '<i class="fas fa-moon"></i> Dark Mode';
+    }
+    
+    // Save theme preference to localStorage
+    localStorage.setItem('theme', currentTheme);
+}
+
+// Update results count display
+function updateResultsCount(count) {
+    resultsCount.textContent = `Showing ${count} ${count === 1 ? 'result' : 'results'}`;
+}
+
+// Show no results message
+function showNoResults() {
+    resultsContainer.innerHTML = `
+        <div class="no-results">
+            <p>No movies found matching your criteria. Try a different search.</p>
+        </div>
+    `;
+}
+
+// Show error message
+function showError(message) {
+    resultsContainer.innerHTML = `
+        <div class="error-message">
+            <p>${message}</p>
+            ${currentTheme === 'light' ? '<p>Run: <code>npx json-server --watch db.json</code></p>' : ''}
+        </div>
+    `;
+    resultsCount.textContent = '';
+}
