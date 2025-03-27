@@ -206,3 +206,36 @@ async function toggleFavorite(e) {
     }
 }
 
+// View favorite movies
+function viewFavorites() {
+    const favoriteMovies = movies.filter(movie => movie.isFavorite);
+    
+    if (favoriteMovies.length === 0) {
+        resultsContainer.innerHTML = `
+            <div class="no-results">
+                <p>You haven't favorited any movies yet.</p>
+            </div>
+        `;
+        updateResultsCount(0);
+    } else {
+        filteredMovies = favoriteMovies;
+        displayMovies(filteredMovies);
+        updateResultsCount(filteredMovies.length);
+    }
+    
+    // Reset search and filters
+    searchInput.value = '';
+    yearFilter.value = '';
+    typeFilter.value = '';
+}
+
+// Reset all filters
+function resetFilters() {
+    searchInput.value = '';
+    yearFilter.value = '';
+    typeFilter.value = '';
+    filteredMovies = [...movies];
+    displayMovies(filteredMovies);
+    updateResultsCount(filteredMovies.length);
+}
+
