@@ -17,6 +17,6 @@ A feature-rich single-page application that allows users to browse, search, and 
 ## Technologies Used
 
 - HTML
-- CSS variables for theming
+- CSS 
 - JavaScript
 - JSON Server for local REST API
