@@ -140,3 +140,69 @@ function applyFilters() {
     }
 }
 
+// Display movies in the results container
+function displayMovies(moviesToDisplay) {
+    if (!moviesToDisplay || moviesToDisplay.length === 0) {
+        showNoResults();
+        return;
+    }
+    
+    resultsContainer.innerHTML = moviesToDisplay.map(movie => `
+        <div class="movie-card" data-id="${movie.imdbID}">
+            <img src="${movie.Poster !== 'N/A' ? movie.Poster : 'https://via.placeholder.com/300x450?text=No+Poster'}" 
+                 alt="${movie.Title}" 
+                 class="movie-poster"
+                 onerror="this.src='https://via.placeholder.com/300x450?text=No+Poster'">
+            <div class="movie-info">
+                <h3 class="movie-title">${movie.Title}</h3>
+                <p class="movie-year">Year: ${movie.Year}</p>
+                <p class="movie-type">Type: ${movie.Type.charAt(0).toUpperCase() + movie.Type.slice(1)}</p>
+                <button class="favorite-btn ${movie.isFavorite ? 'favorited' : ''}" 
+                        data-id="${movie.imdbID}">
+                    <i class="${movie.isFavorite ? 'fas' : 'far'} fa-heart"></i> 
+                    ${movie.isFavorite ? 'Favorited' : 'Favorite'}
+                </button>
+            </div>
+        </div>
+    `).join('');
+    
+    // Add event listeners to favorite buttons
+    document.querySelectorAll('.favorite-btn').forEach(btn => {
+        btn.addEventListener('click', toggleFavorite);
+    });
+}
+
+// Toggle favorite status
+async function toggleFavorite(e) {
+    const btn = e.currentTarget;
+    const imdbID = btn.dataset.id;
+    const movie = movies.find(m => m.imdbID === imdbID);
+    
+    try {
+        // Toggle favorite status
+        movie.isFavorite = !movie.isFavorite;
+        
+        // Update UI
+        if (movie.isFavorite) {
+            btn.classList.add('favorited');
+            btn.innerHTML = '<i class="fas fa-heart"></i> Favorited';
+        } else {
+            btn.classList.remove('favorited');
+            btn.innerHTML = '<i class="far fa-heart"></i> Favorite';
+        }
+        
+        // Update in db.json via json-server
+        await fetch(`${API_URL}/${imdbID}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ isFavorite: movie.isFavorite }),
+        });
+        
+    } catch (error) {
+        console.error('Error toggling favorite:', error);
+        alert('Failed to update favorite status. Please try again.');
+    }
+}
+
