@@ -1,6 +1,6 @@
 # Movie Search App with JSON Server
 
-A feature-rich single-page application that allows users to browse, search, and manage a collection of movies stored in a local `db.json` file served via JSON Server.
+A feature-rich single-page application that allows users to browse, search, and manage a collection of movies stored in a local db.json file served via JSON Server.
 
 ## Features
 
