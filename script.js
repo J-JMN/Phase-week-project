@@ -14,7 +14,6 @@ let filteredMovies = [];
 let currentTheme = localStorage.getItem('theme') || 'light';
 const API_URL = 'http://localhost:3000/movies';
 
-
 document.addEventListener('DOMContentLoaded', initializeApp);
 
 searchForm.addEventListener('submit', handleSearch);
@@ -26,6 +25,7 @@ resetFiltersBtn.addEventListener('click', resetFilters);
 
 async function initializeApp() {
     setInitialTheme();
+    
     try {
         showLoading();
         const response = await fetch(API_URL);
@@ -33,6 +33,7 @@ async function initializeApp() {
         
         movies = await response.json();
         filteredMovies = [...movies];
+        
         displayMovies(filteredMovies);
         updateResultsCount(filteredMovies.length);
         
@@ -92,7 +93,6 @@ function filterMovies() {
     displayMovies(filteredMovies);
     updateResultsCount(filteredMovies.length);
 }
-
 
 function applyFilters() {
     const year = yearFilter.value;
@@ -222,15 +222,12 @@ function toggleTheme() {
         themeBtn.innerHTML = '<i class="fas fa-moon"></i> Dark Mode';
     }
     
-    
     localStorage.setItem('theme', currentTheme);
 }
-
 
 function updateResultsCount(count) {
     resultsCount.textContent = `Showing ${count} ${count === 1 ? 'result' : 'results'}`;
 }
-
 
 function showNoResults() {
     resultsContainer.innerHTML = `
