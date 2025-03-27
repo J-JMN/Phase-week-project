@@ -1,4 +1,3 @@
-// DOM Elements
 const searchForm = document.getElementById('search-form');
 const searchInput = document.getElementById('search-input');
 const resultsContainer = document.getElementById('results-container');
@@ -10,16 +9,14 @@ const viewFavoritesBtn = document.getElementById('view-favorites');
 const resetFiltersBtn = document.getElementById('reset-filters');
 const resultsCount = document.getElementById('results-count');
 
-// State
 let movies = [];
 let filteredMovies = [];
 let currentTheme = localStorage.getItem('theme') || 'light';
 const API_URL = 'http://localhost:3000/movies';
 
-// Initialize the app
+
 document.addEventListener('DOMContentLoaded', initializeApp);
 
-// Event Listeners
 searchForm.addEventListener('submit', handleSearch);
 yearFilter.addEventListener('change', filterMovies);
 typeFilter.addEventListener('change', filterMovies);
@@ -27,12 +24,8 @@ themeBtn.addEventListener('click', toggleTheme);
 viewFavoritesBtn.addEventListener('click', viewFavorites);
 resetFiltersBtn.addEventListener('click', resetFilters);
 
-// Initialize application
 async function initializeApp() {
-    // Set initial theme
     setInitialTheme();
-    
-    // Load movies
     try {
         showLoading();
         const response = await fetch(API_URL);
@@ -40,8 +33,6 @@ async function initializeApp() {
         
         movies = await response.json();
         filteredMovies = [...movies];
-        
-        // Initialize with all movies
         displayMovies(filteredMovies);
         updateResultsCount(filteredMovies.length);
         
@@ -53,7 +44,6 @@ async function initializeApp() {
     }
 }
 
-// Set initial theme from localStorage
 function setInitialTheme() {
     if (currentTheme === 'dark') {
         document.body.classList.add('dark-mode');
@@ -64,7 +54,6 @@ function setInitialTheme() {
     }
 }
 
-// Handle search form submission
 async function handleSearch(e) {
     e.preventDefault();
     const searchTerm = searchInput.value.trim().toLowerCase();
@@ -73,16 +62,13 @@ async function handleSearch(e) {
         showLoading();
         
         if (!searchTerm) {
-            // If search is empty, reset to all movies
             filteredMovies = [...movies];
         } else {
-            // Filter movies based on search term
             filteredMovies = movies.filter(movie => 
                 movie.Title.toLowerCase().includes(searchTerm)
             );
         }
         
-        // Apply any existing filters
         applyFilters();
         
         if (filteredMovies.length === 0) {
@@ -101,22 +87,19 @@ async function handleSearch(e) {
     }
 }
 
-
-// Filter movies based on selected filters
 function filterMovies() {
     applyFilters();
     displayMovies(filteredMovies);
     updateResultsCount(filteredMovies.length);
 }
 
-// Apply year and type filters to the current movie list
+
 function applyFilters() {
     const year = yearFilter.value;
     const type = typeFilter.value;
     
     filteredMovies = [...movies];
     
-    // Apply search filter if there's a search term
     const searchTerm = searchInput.value.trim().toLowerCase();
     if (searchTerm) {
         filteredMovies = filteredMovies.filter(movie => 
@@ -124,7 +107,6 @@ function applyFilters() {
         );
     }
     
-    // Apply year filter
     if (year) {
         filteredMovies = filteredMovies.filter(movie => {
             const movieYear = movie.Year.includes('-') 
@@ -134,13 +116,11 @@ function applyFilters() {
         });
     }
     
-    // Apply type filter
     if (type) {
         filteredMovies = filteredMovies.filter(movie => movie.Type === type);
     }
 }
 
-// Display movies in the results container
 function displayMovies(moviesToDisplay) {
     if (!moviesToDisplay || moviesToDisplay.length === 0) {
         showNoResults();
@@ -166,23 +146,19 @@ function displayMovies(moviesToDisplay) {
         </div>
     `).join('');
     
-    // Add event listeners to favorite buttons
     document.querySelectorAll('.favorite-btn').forEach(btn => {
         btn.addEventListener('click', toggleFavorite);
     });
 }
 
-// Toggle favorite status
 async function toggleFavorite(e) {
     const btn = e.currentTarget;
     const imdbID = btn.dataset.id;
     const movie = movies.find(m => m.imdbID === imdbID);
     
     try {
-        // Toggle favorite status
         movie.isFavorite = !movie.isFavorite;
         
-        // Update UI
         if (movie.isFavorite) {
             btn.classList.add('favorited');
             btn.innerHTML = '<i class="fas fa-heart"></i> Favorited';
@@ -191,7 +167,6 @@ async function toggleFavorite(e) {
             btn.innerHTML = '<i class="far fa-heart"></i> Favorite';
         }
         
-        // Update in db.json via json-server
         await fetch(`${API_URL}/${imdbID}`, {
             method: 'PATCH',
             headers: {
@@ -206,7 +181,6 @@ async function toggleFavorite(e) {
     }
 }
 
-// View favorite movies
 function viewFavorites() {
     const favoriteMovies = movies.filter(movie => movie.isFavorite);
     
@@ -223,13 +197,11 @@ function viewFavorites() {
         updateResultsCount(filteredMovies.length);
     }
     
-    // Reset search and filters
     searchInput.value = '';
     yearFilter.value = '';
     typeFilter.value = '';
 }
 
-// Reset all filters
 function resetFilters() {
     searchInput.value = '';
     yearFilter.value = '';
@@ -239,7 +211,6 @@ function resetFilters() {
     updateResultsCount(filteredMovies.length);
 }
 
-// Toggle between light and dark theme
 function toggleTheme() {
     if (currentTheme === 'light') {
         document.body.classList.add('dark-mode');
@@ -251,16 +222,16 @@ function toggleTheme() {
         themeBtn.innerHTML = '<i class="fas fa-moon"></i> Dark Mode';
     }
     
-    // Save theme preference to localStorage
+    
     localStorage.setItem('theme', currentTheme);
 }
 
-// Update results count display
+
 function updateResultsCount(count) {
     resultsCount.textContent = `Showing ${count} ${count === 1 ? 'result' : 'results'}`;
 }
 
-// Show no results message
+
 function showNoResults() {
     resultsContainer.innerHTML = `
         <div class="no-results">
@@ -269,7 +240,6 @@ function showNoResults() {
     `;
 }
 
-// Show error message
 function showError(message) {
     resultsContainer.innerHTML = `
         <div class="error-message">
