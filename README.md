@@ -20,3 +20,15 @@ A feature-rich single-page application that allows users to browse, search, and 
 - CSS 
 - JavaScript
 - JSON Server for local REST API
+
+## Author
+**Joseph Mburu**  
+GitHub: [@J-JMN](https://github.com/J-JMN)  
+
+### Prerequisites
+- Node.js (v14 or later)
+- Modern web browser
+
+### Installation
+1. Clone the repository:
+   `https://github.com/J-JMN/Phase-week-project`
