@@ -225,9 +225,22 @@ function toggleTheme() {
     localStorage.setItem('theme', currentTheme);
 }
 
+
 function updateResultsCount(count) {
     resultsCount.textContent = `Showing ${count} ${count === 1 ? 'result' : 'results'}`;
 }
+
+
+function showLoading() {
+    loadingElement.classList.remove('hidden');
+    resultsContainer.innerHTML = '';
+    resultsCount.textContent = '';
+}
+
+function hideLoading() {
+    loadingElement.classList.add('hidden');
+}
+
 
 function showNoResults() {
     resultsContainer.innerHTML = `
